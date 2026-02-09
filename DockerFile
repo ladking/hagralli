@@ -1,22 +1,23 @@
-FROM node:alpine as builder
+FROM node:20-alpine as builder
 
 WORKDIR /hagralli
 
-COPY package.json ./
+COPY package.json yarn.lock ./
 
-RUN ["yarn", "install"]
+RUN yarn install --frozen-lockfile
 
 COPY . .
 
-RUN ["yarn", "build"]
+RUN yarn build
 
 
-FROM node:alpine
+FROM node:20-alpine
 
 WORKDIR /hagralli
 
-COPY --from=builder /hagralli .
+COPY --from=builder /hagralli/.output ./.output
 
-RUN ["node", ".output/server/index.mjs"]
-
+ENV PORT=3505
 EXPOSE 3505
+
+CMD ["node", ".output/server/index.mjs"]
