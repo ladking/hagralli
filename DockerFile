@@ -1,0 +1,22 @@
+FROM node:alpine as builder
+
+WORKDIR /hagralli
+
+COPY package.json ./
+
+RUN ["yarn", "install"]
+
+COPY . .
+
+RUN ["yarn", "build"]
+
+
+FROM node:alpine
+
+WORKDIR /hagralli
+
+COPY --from=builder /hagralli .
+
+RUN ["node", ".output/server/index.mjs"]
+
+EXPOSE 3505
