@@ -1,0 +1,6 @@
+name: "Hagralli Continouse Integration"
+
+on:
+  push:
+    branches:
+      - main
